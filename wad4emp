@@ -1,0 +1,247 @@
+CREATE TABLE Department (
+    DeptNo INT PRIMARY KEY,
+    DeptName VARCHAR(50) UNIQUE NOT NULL,
+    ManagerSSN CHAR(9),
+    ManagerStartDate DATE,
+    FOREIGN KEY (ManagerSSN) REFERENCES Employee(SSN)
+);
+
+CREATE TABLE Employee (
+    SSN CHAR(9) PRIMARY KEY,
+    Name VARCHAR(50),
+    Address VARCHAR(100),
+    Salary DECIMAL(10,2),
+    Sex CHAR(1),
+    BirthDate DATE,
+    DeptNo INT,
+    SupervisorSSN CHAR(9),
+    FOREIGN KEY (DeptNo) REFERENCES Department(DeptNo),
+    FOREIGN KEY (SupervisorSSN) REFERENCES Employee(SSN)
+);
+
+CREATE TABLE Dept_Location (
+    DeptNo INT,
+    Location VARCHAR(50),
+    PRIMARY KEY (DeptNo, Location),
+    FOREIGN KEY (DeptNo) REFERENCES Department(DeptNo)
+);
+
+CREATE TABLE Project (
+    ProjectNo INT PRIMARY KEY,
+    ProjectName VARCHAR(50) UNIQUE,
+    Location VARCHAR(50),
+    DeptNo INT,
+    FOREIGN KEY (DeptNo) REFERENCES Department(DeptNo)
+);
+
+CREATE TABLE Works_On (
+    SSN CHAR(9),
+    ProjectNo INT,
+    HoursPerWeek DECIMAL(4,1),
+    PRIMARY KEY (SSN, ProjectNo),
+    FOREIGN KEY (SSN) REFERENCES Employee(SSN),
+    FOREIGN KEY (ProjectNo) REFERENCES Project(ProjectNo)
+);
+
+CREATE TABLE Dependent (
+    SSN CHAR(9),
+    DependentName VARCHAR(50),
+    Sex CHAR(1),
+    BirthDate DATE,
+    Relationship VARCHAR(20),
+    PRIMARY KEY (SSN, DependentName),
+    FOREIGN KEY (SSN) REFERENCES Employee(SSN)
+);
+
+INSERT INTO Department VALUES
+(10, 'HR', NULL, NULL),
+(20, 'IT', NULL, NULL),
+(30, 'Finance', NULL, NULL),
+(40, 'Marketing', NULL, NULL),
+(50, 'Operations', NULL, NULL);
+
+INSERT INTO Employee VALUES
+(11, 'Amit Sharma', 'Delhi', 90000, 'M', '1984-03-12', 20, NULL),
+(12, 'Priya Verma', 'Mumbai', 75000, 'F', '1990-07-22', 10, 11),
+(13, 'Rohit Mehta', 'Ahmedabad', 82000, 'M', '1987-11-05', 20, 11),
+(14, 'Neha Singh', 'Lucknow', 70000, 'F', '1992-01-17', 30, 13),
+(15, 'Anil Kumar', 'Chennai', 95000, 'M', '1983-09-09', 40, 11),
+(16, 'Sunita Rao', 'Bangalore', 88000, 'F', '1986-06-30', 20, 13),
+(17, 'Vikas Jain', 'Jaipur', 65000, 'M', '1993-12-14', 10, 12),
+(18, 'Pooja Nair', 'Kochi', 72000, 'F', '1991-04-25', 30, 14),
+(19, 'Suresh Patel', 'Surat', 68000, 'M', '1989-08-08', 50, 11),
+(20, 'Kavita Joshi', 'Indore', 70000, 'F', '1994-02-02', 50, 19),
+(21, 'Manoj Das', 'Kolkata', 73000, 'M', '1988-10-10', 40, 15),
+(22, 'Rina Ghosh', 'Kolkata', 71000, 'F', '1991-05-19', 40, 15),
+(23, 'Deepak Yadav', 'Noida', 76000, 'M', '1987-03-03', 20, 13),
+(24, 'Anjali Malhotra', 'Gurgaon', 74000, 'F', '1992-09-15', 10, 12),
+(25, 'Nitin Bansal', 'Meerut', 69000, 'M', '1990-06-18', 30, 14);
+
+UPDATE Department SET ManagerSSN = 12, ManagerStartDate = '2019-01-01' WHERE DeptNo = 10;
+UPDATE Department SET ManagerSSN = 11, ManagerStartDate = '2018-06-01' WHERE DeptNo = 20;
+UPDATE Department SET ManagerSSN = 14, ManagerStartDate = '2020-03-15' WHERE DeptNo = 30;
+UPDATE Department SET ManagerSSN = 15, ManagerStartDate = '2017-11-20' WHERE DeptNo = 40;
+UPDATE Department SET ManagerSSN = 19, ManagerStartDate = '2021-04-10' WHERE DeptNo = 50;
+
+INSERT INTO Dept_Location VALUES
+(10, 'Delhi'),
+(10, 'Mumbai'),
+(20, 'Bangalore'),
+(20, 'Hyderabad'),
+(20, 'Pune'),
+(30, 'Chennai'),
+(30, 'Coimbatore'),
+(40, 'Pune'),
+(40, 'Nagpur'),
+(50, 'Indore'),
+(50, 'Bhopal');
+
+INSERT INTO Project VALUES
+(101, 'Recruitment System', 'Delhi', 10),
+(102, 'Employee Portal', 'Mumbai', 10),
+(201, 'ERP System', 'Bangalore', 20),
+(202, 'Mobile Banking App', 'Hyderabad', 20),
+(203, 'Cloud Migration', 'Pune', 20),
+(301, 'Tax Analysis', 'Chennai', 30),
+(302, 'Audit System', 'Coimbatore', 30),
+(401, 'Digital Campaign', 'Pune', 40),
+(402, 'Market Research', 'Nagpur', 40),
+(501, 'Supply Chain Tool', 'Indore', 50),
+(502, 'Warehouse Automation', 'Bhopal', 50);
+
+INSERT INTO Works_On VALUES
+(11, 201, 25.0),
+(11, 203, 15.0),
+(12, 101, 20.0),
+(12, 102, 10.0),
+(13, 201, 30.0),
+(13, 202, 20.0),
+(14, 301, 18.0),
+(14, 302, 12.0),
+(15, 401, 25.0),
+(15, 402, 15.0),
+(16, 203, 28.0),
+(17, 101, 22.0),
+(18, 301, 20.0),
+(19, 501, 30.0),
+(19, 502, 15.0),
+(20, 501, 18.0),
+(21, 401, 20.0),
+(22, 402, 22.0),
+(23, 202, 26.0),
+(24, 102, 24.0),
+(25, 302, 21.0);
+
+INSERT INTO Dependent VALUES
+(11, 'Rahul Sharma', 'M', '2010-05-12', 'Son'),
+(11, 'Sneha Sharma', 'F', '2013-08-19', 'Daughter'),
+(12, 'Ravi Verma', 'M', '2015-02-10', 'Son'),
+(13, 'Kiran Mehta', 'F', '1989-07-07', 'Spouse'),
+(14, 'Ananya Singh', 'F', '2018-11-23', 'Daughter'),
+(15, 'Suresh Kumar', 'M', '2009-09-30', 'Son'),
+(16, 'Aarav Rao', 'M', '2014-01-15', 'Son'),
+(17, 'Nisha Jain', 'F', '1995-04-20', 'Spouse'),
+(18, 'Dev Nair', 'M', '2016-06-06', 'Son'),
+(19, 'Mehul Patel', 'M', '2012-12-12', 'Son'),
+(20, 'Riya Joshi', 'F', '2017-03-03', 'Daughter');
+
+SELECT e.Name, d.DeptName, e.Salary
+FROM Employee e
+JOIN Department d ON e.DeptNo = d.DeptNo
+WHERE e.Salary >
+(
+    SELECT AVG(e2.Salary)
+    FROM Employee e2
+    JOIN Department d2 ON e2.DeptNo = d2.DeptNo
+    WHERE d2.DeptName = 'Finance'
+);
+
+Query 2
+SELECT e.Name, d.DeptName, e.Salary
+FROM Employee e
+JOIN Department d ON e.DeptNo = d.DeptNo
+WHERE e.Salary >
+(
+    SELECT AVG(e2.Salary)
+    FROM Employee e2
+    JOIN Department d2 ON e2.DeptNo = d2.DeptNo
+    WHERE d2.DeptName = 'Finance'
+);
+
+ALTER TABLE Project
+ADD CompletionDate DATE;
+
+
+UPDATE Project
+SET CompletionDate = '2026-03-15'
+WHERE ProjectNo = 202;
+
+UPDATE Project
+SET CompletionDate = '2026-06-30'
+WHERE ProjectNo = 203;
+
+UPDATE Project
+SET CompletionDate = '2026-09-10'
+WHERE ProjectNo = 402;
+
+UPDATE Project
+SET CompletionDate = '2026-12-01'
+WHERE ProjectNo = 502;
+
+
+SELECT p.ProjectNo   AS ProjectID,
+       p.ProjectName AS ProjectTitle,
+       d.DeptName,
+       p.CompletionDate
+FROM Project p
+JOIN Department d ON p.DeptNo = d.DeptNo
+WHERE p.CompletionDate > CURRENT_DATE;
+
+SELECT s.SSN, s.Name
+FROM Employee s
+JOIN Employee e ON s.SSN = e.SupervisorSSN
+JOIN Works_On w ON e.SSN = w.SSN
+GROUP BY s.SSN, s.Name
+HAVING COUNT(DISTINCT e.SSN) > 3;
+
+ALTER TABLE Project
+ADD ProjectAmount DECIMAL(12,2);
+
+UPDATE Project SET ProjectAmount = 400000 WHERE ProjectNo = 101;
+UPDATE Project SET ProjectAmount = 350000 WHERE ProjectNo = 102;
+
+UPDATE Project SET ProjectAmount = 500000 WHERE ProjectNo = 201;
+UPDATE Project SET ProjectAmount = 450000 WHERE ProjectNo = 202;
+UPDATE Project SET ProjectAmount = 300000 WHERE ProjectNo = 203;
+
+UPDATE Project SET ProjectAmount = 380000 WHERE ProjectNo = 301;
+UPDATE Project SET ProjectAmount = 420000 WHERE ProjectNo = 302;
+
+UPDATE Project SET ProjectAmount = 600000 WHERE ProjectNo = 401;
+UPDATE Project SET ProjectAmount = 550000 WHERE ProjectNo = 402;
+
+UPDATE Project SET ProjectAmount = 700000 WHERE ProjectNo = 501;
+UPDATE Project SET ProjectAmount = 650000 WHERE ProjectNo = 502;
+
+
+SELECT e.SSN, e.Name, SUM(p.ProjectAmount) AS TotalProjectAmount, d.DependentName
+FROM Dependent d
+JOIN Employee e ON d.SSN = e.SSN
+JOIN Works_On w ON e.SSN = w.SSN
+JOIN Project p ON w.ProjectNo = p.ProjectNo
+GROUP BY e.SSN, e.Name, d.DependentName
+HAVING SUM(p.ProjectAmount) >= 1000000;
+
+
+SELECT DISTINCT
+       e.SSN, e.DeptNo ,p.ProjectNo ,p.Location
+FROM Employee e
+JOIN Works_On w ON e.SSN = w.SSN
+JOIN Project p ON w.ProjectNo = p.ProjectNo
+WHERE e.SSN IN (
+    SELECT w1.SSN
+    FROM Works_On w1
+    JOIN Project p1 ON w1.ProjectNo = p1.ProjectNo
+    GROUP BY w1.SSN
+    HAVING COUNT(DISTINCT p1.Location) > 1
+);
